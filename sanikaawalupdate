@@ -1,0 +1,50 @@
+# payment_system.py
+
+class GlobalPaymentSystem:
+    def __init__(self):
+        # Initialize an empty dictionary to store user accounts
+        self.accounts = {}
+
+    def create_account(self, user_id, account_type):
+        # Create a new user account with a specified account type
+        if user_id not in self.accounts:
+            self.accounts[user_id] = {'account_type': account_type, 'balance': 0.0}
+
+    def make_payment(self, sender_id, receiver_id, amount):
+        # Process a payment from one user to another
+        if sender_id not in self.accounts or receiver_id not in self.accounts:
+            raise ValueError("Invalid sender or receiver ID")
+
+        sender_balance = self.accounts[sender_id]['balance']
+        if sender_balance < amount:
+            raise ValueError("Insufficient funds")
+
+        # Deduct the amount from the sender's account and add it to the receiver's account
+        self.accounts[sender_id]['balance'] -= amount
+        self.accounts[receiver_id]['balance'] += amount
+
+    def check_balance(self, user_id):
+        # Check the balance of a specific user
+        if user_id not in self.accounts:
+            raise ValueError("Invalid user ID")
+
+        return self.accounts[user_id]['balance']
+
+
+# Example Usage
+payment_system = GlobalPaymentSystem()
+
+# Create accounts
+payment_system.create_account("user1", "Savings")
+payment_system.create_account("user2", "Checking")
+
+# Make payment
+payment_system.make_payment("user1", "user2", 100.0)
+
+# Check balance
+user1_balance = payment_system.check_balance("user1")
+user2_balance = payment_system.check_balance("user2")
+
+# Display balances
+print(f"User1 Balance: {user1_balance}")
+print(f"User2 Balance: {user2_balance}")
